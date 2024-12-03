@@ -1,0 +1,134 @@
+---
+title: "HW6 - Lab supplement" 
+author: "Gaeun Jun: A16814573"
+format: pdf
+---
+```{r}
+
+library(bio3d)
+
+s1 <- read.pdb("4AKE") # kinase with drug
+s2 <- read.pdb("1AKE") # kinase no drug
+s3 <- read.pdb("1E4Y") # kinase with drug
+s1.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s2.chainA <- trim.pdb(s2, chain="A", elety="CA")
+s3.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s1.b <- s1.chainA$atom$b
+s2.b <- s2.chainA$atom$b
+s3.b <- s3.chainA$atom$b
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor")
+plotb3(s2.b, sse=s2.chainA, typ="l", ylab="Bfactor")
+plotb3(s3.b, sse=s3.chainA, typ="l", ylab="Bfactor")
+```
+
+> Q1. What type of object is returned from the read.pdb() function?
+
+```{r}
+str(s1)
+```
+A list is returned from the read.pdb() function. 
+
+> Q2. What does the trim.pdb() function do?
+
+```{r}
+s1.chainA
+```
+The trim.pdb() function allows me to call a specific model type in the list of atom data frames. For the specified findings, like `chain` and `elety`, using the trim function can find the specified chain and element type of the atom list, essentially "trimming" down the many options that could be found within the data frame. 
+
+> Q3. What input parameter would turn off the marginal black and grey rectangles in the plots and what do they represent in this case?
+
+```{r}
+?plotb3
+```
+
+```{r}
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor", top=FALSE, bot=FALSE)
+```
+The parameters `top` and `bottom` = FALSE would turn the marginal black and grey rectangles off. They indicate the range of the residue values.
+
+
+> Q4. What would be a better plot to compare across the different proteins?
+
+A better plot to compare across the different proteins would probably be one that can merge the plots together (while still maintaining a line plot), with different colors to represent the different line plots. A good legend with the colors and representations would be needed as well. 
+
+> Q5. Which proteins are more similar to each other in their B-factor trends? How could you quantify this?
+
+```{r}
+hc <- hclust( dist( rbind(s1.b, s2.b, s3.b) ) )
+plot(hc)
+```
+
+The s1.b and s3.b proteins are most similar and a way to quantify this is through height. The farther the height difference is, the less similar the proteins are. Because the s1.b and the s3.b genes are the same in height and both have a height difference of 350 with the s2.b protein, the two are more similar to each other. 
+
+
+# HOMEWORK
+
+> Q6. How would you generalize the original code above to work with any set of input protein structures?
+
+This is the example output. 
+```{r}
+library(bio3d)
+
+s1 <- read.pdb("4AKE") # kinase with drug
+s2 <- read.pdb("1AKE") # kinase no drug
+s3 <- read.pdb("1E4Y") # kinase with drug
+s1.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s2.chainA <- trim.pdb(s2, chain="A", elety="CA")
+s3.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s1.b <- s1.chainA$atom$b
+s2.b <- s2.chainA$atom$b
+s3.b <- s3.chainA$atom$b
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor")
+plotb3(s2.b, sse=s2.chainA, typ="l", ylab="Bfactor")
+plotb3(s3.b, sse=s3.chainA, typ="l", ylab="Bfactor")
+```
+
+
+This is the function code.
+```{r}
+library(bio3d) 
+
+# Create a function to read a PDB file and output B-factors for chain A
+get_b_factors <- function(pdb_id) {
+  
+  # Read the PDB file
+  pdb <- read.pdb(pdb_id)
+  
+  # Use the `trim()` function to filter to chain A and C-alpha atoms
+  chainA <- trim.pdb(pdb, chain="A", elety="CA")
+  
+  # Return the B-factors
+  return(chainA$atom$b)
+}
+
+# List of PDB IDs
+pdb_ids <- c("4AKE", "1AKE", "1E4Y")
+
+# Initialize an empty list function where you could store B_factors
+b_factors_list <- list()
+
+# Loop through each PDB ID to get B-factors
+for (id in pdb_ids) {
+  b_factors_list[[id]] <- get_b_factors(id)
+}
+
+# Create a combined plot for B-factors for optimal comparison
+plot(NULL, xlim=c(1, length(b_factors_list[[1]])), 
+     ylim=range(unlist(b_factors_list)), 
+     xlab="Residue Index", ylab="B-factor", 
+     main="B-factor Trends Comparison")
+
+# Use colors to differentiate the different line plots that represent different B_factors
+colors <- c("lightblue", "pink", "limegreen")
+
+# Plot B-factors for each protein
+for (i in seq_along(b_factors_list)) {
+  lines(b_factors_list[[i]], col=colors[i], type="l", lwd=1)
+}
+
+# Use a legend to simplify read
+legend("topright", legend=pdb_ids, col=colors, lty=1, lwd=1)
+```
+
+
+

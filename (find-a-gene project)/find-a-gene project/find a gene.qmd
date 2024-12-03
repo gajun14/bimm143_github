@@ -1,0 +1,100 @@
+---
+title: "find-a-gene"
+format: html
+---
+
+```{r}
+library(bio3d)
+library(ggplot2)
+library(pheatmap)
+library(readr)
+```
+
+```{r}
+fasta_file <- "/Users/hannahjun/Desktop/bimm 143/(find-a-gene project)/aligned_sequences.fst"
+sequences <- read.fasta(fasta_file)
+```
+
+```{r}
+seq_identity_matrix <- seqidentity(sequences)
+```
+
+```{r}
+
+pheatmap(seq_identity_matrix, 
+         clustering_distance_rows = "euclidean",  # Clustering method
+         clustering_distance_cols = "euclidean",  # Clustering method  # Show numbers inside heatmap cells
+         fontsize = 10,  # Increase font size for readability
+         cellwidth = 15,  # Adjust cell width
+         cellheight = 15,  # Adjust cell height
+         fontsize_row = 7,  # Font size for row labels
+         fontsize_col = 7,  # Font size for column labels
+         width = 500,  # Width of the heatmap
+         height = 1000,
+         treeheight_row = 80,  # Make row dendrogram taller
+         treeheight_col = 80)
+
+# Height of the heatmap
+
+```
+
+
+
+
+```{r}
+blast_hits <- blast.pdb("RMLPTYVCGLPDGTEKGKFLALDLGGTNFRVLLVKIRSGRRSVRMYNKIFAIPLEIMQGTGEELFDHIVQCIADFLDYMGLKGASLPLGFTFSFPCRQMSIDKGTLIGWTKGFKATDCEGEDVVDMLREAIKRRNEFDLDIVAVVNDTVGTMMTCGYEDPNCEIGLIAGTGSNMCYMEDMRNIEMVEGGEGKMCINTEWGGFGDNGCIDIWTRYDTEVDEGSLNPGKQRYEKMTSGMYLGEIVRQILIDLTKQGLLFRGQISERLRTRGIFETKFLSQIESDRLALLQVRRILQQLGLDSTCEDSIVVKEVCGAVSRRAAQLCGAGLAAIVEKRR")
+
+# View the top hits
+head(blast_hits)
+```
+
+
+```{r}
+head(blast_hits)
+
+# Extract the 'evalue' and other relevant columns properly
+# For example, if blast_hits is a list, and the data is in the first element:
+evalues <- blast_hits[[1]]$evalue
+top_hits <- blast_hits[[1]][order(evalues), ][1:20, ]
+
+# Show the top hits with E-value and sequence identity
+top_hits
+```
+
+```{r}
+# Annotate the top hits
+annotations <- pdb.annotate(top_hits$pdb.id)
+
+# Display annotations for the top hits
+annotations
+```
+
+
+```{r}
+fasta_file <- "/Users/hannahjun/Desktop/bimm 143/(find-a-gene project)/aligned_sequences.fst"
+sequences <- read.fasta(fasta_file)
+```
+
+```{r}
+identity_matrix <- identity(sequences)
+```
+
+```{r}
+max_identity <- apply(identity_matrix, 1, max)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

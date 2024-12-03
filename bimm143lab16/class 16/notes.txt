@@ -1,0 +1,17 @@
+
+pwd: print working dir
+cd: change dir
+ls: list files in the current dir
+mkdir: make a new dir/folder
+nano: a basic text editor
+less: check file content, q to quit
+
+ssh -i "~/Downloads/bimm143_gajun.pem" ubuntu@ec2-34-208-162-51.us-west-2.compute.amazonaws.com
+scp -i "~/Downloads/bimm143_gajun.pem" ubuntu@ec2-34-208-162-51.us-west-2.compute.amazonaws.com:~/work/mm-second.x.zebrafish.tsv myresult.tsv
+
+
+
+
+
+
+
