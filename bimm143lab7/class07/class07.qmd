@@ -1,7 +1,7 @@
 ---
 title: "class07"
 author: Gaeun Jun, A16814573
-format: pdf
+format: gfm
 ---
 
 # Principal Component Analysis (PCA)
