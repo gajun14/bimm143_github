@@ -1,7 +1,7 @@
 ---
 title: "Class 05: Data Vizualization with GGPLOT"
 author: "Gaeun (PID: A16814573)"
-format: pdf
+format: gfm
 ---
 Questions:
 
