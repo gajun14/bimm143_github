@@ -1,7 +1,7 @@
 ---
 title: "Class 10 - Halloween"
 author: "Gaeun Jun (A16814573)"
-format: pdf
+format: gfm
 ---
 
 ### 1. Importing candy data
